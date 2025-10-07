@@ -7,6 +7,8 @@ import AuthPage from './pages/AuthPage'
 import Redirect_Link from './pages/Redirect_Link'
 import Link from './pages/Link'
 import UrlProvider from './context'
+import { Toaster } from "react-hot-toast";
+import RequireAuth from './components/RequireAuth'
 
 const router = createBrowserRouter([
   {
@@ -18,15 +20,15 @@ const router = createBrowserRouter([
       },
       {
         path:'/dashboard',
-        element: <Dashboard />
+        element: <RequireAuth> <Dashboard /> </RequireAuth>
       },
       {
         path:'/auth',
-        element: <AuthPage />
+        element:  <AuthPage />
       },
       {
         path:'/link/:id',
-        element: <Link />
+        element: <RequireAuth><Link /></RequireAuth>
       },
       {
         path:'/:id',
@@ -38,10 +40,12 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
+    <>
     <UrlProvider>
     <RouterProvider router={router} />
     </UrlProvider>
-    
+    <Toaster position="top-right" />
+    </>
   )
 }
 

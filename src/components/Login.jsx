@@ -18,6 +18,7 @@ import * as Yup from 'yup'
 import { useFetch } from '../hooks/use-fetch'
 import { login } from '../db/apiAuth'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { UrlState } from '../Context'
 
 const Login = () => {
   const [errors, setErrors] = React.useState({}) // CHANGE: object (not array)
@@ -30,6 +31,8 @@ const Login = () => {
   // CHANGE: do NOT pass formData to the hook; call-time args are safer
   const { data, error, loading, fn: fnLogin } = useFetch(login)
 
+  const {fetchUser} = UrlState();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -40,6 +43,7 @@ const Login = () => {
     if (data?.user) {
       const qs = longLink ? `?createNew=${encodeURIComponent(longLink)}` : ''
       navigate(`/dashboard${qs}`)
+      fetchUser();
     }
   }, [data, longLink, navigate])
 
