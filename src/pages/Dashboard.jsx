@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Filter } from 'lucide-react'
 import { useFetch } from '@/hooks/use-fetch'
 import { UrlState } from '@/Context'
-import { getClicksForUrls } from '@/db/apiCLicks'
+import { getClicksForUrls } from '@/db/apiClicks'
 import { getUrls } from '@/db/apiUrls'
+import LinkCard from '@/components/LinkCard'
 
 const Dashboard = () => {
   
@@ -19,12 +20,21 @@ const Dashboard = () => {
 
 
   useEffect(()=>{
-      
-  },[])
+        fnUrls
+  },[]);
+
+   useEffect(()=>{
+      if(urls?.length) fnClicks();
+  },[urls?.length]);
+
+  const filteredUrls = urls?.filter((url)=>{
+    url.title.toLowerCase().includes(searchQuery.toLowerCase()); 
+  })
+  
   
   return (
     <div className='flex flex-col gap-8'>
-       { !true && <BarLoader width={'100%'} color='#36d7b7'  /> } 
+       { (loading || loadingClicks) && (<BarLoader width={'100%'} color='#36d7b7'  /> )} 
         <div className='grid grid-cols-2 gap-4'>
           
         <Card>
@@ -32,7 +42,7 @@ const Dashboard = () => {
            <CardTitle>Links Created</CardTitle>
          </CardHeader>
           <CardContent>
-          <p>0</p>
+          <p>{urls?.length}</p>
          </CardContent>
           </Card>
 
@@ -41,7 +51,7 @@ const Dashboard = () => {
            <CardTitle>Total Clicks</CardTitle>
          </CardHeader>
           <CardContent>
-          <p>0</p>
+          <p>{clicks?.length || 0}</p>
          </CardContent>
           </Card>
         </div>
@@ -61,7 +71,10 @@ const Dashboard = () => {
             />
             <Filter className='absolute top-2 right-2 p-1'/>
           </div>
-          <Error message={error.message}  />
+         {error && <Error message={error?.message}  />}
+         {(filteredUrls||[]).map((url,i)=>{
+            return <LinkCard key={i} url={url} fetchUrls={fnUrls} />
+         })}
       </div>
   )
 }

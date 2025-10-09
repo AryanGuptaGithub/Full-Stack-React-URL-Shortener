@@ -4,7 +4,7 @@ export async function getClicksForUrls(urlIds){
     const {data, error} = await supabase
         .from('click') // table name
         .select("*")  // get everything
-        .in("utl_id", urlIds) // 
+        .in("url_id", urlIds) // 
 
     if(error){
         console.error(error.message);
