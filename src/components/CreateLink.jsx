@@ -6,4 +6,4 @@ const CreateLink = () => {
   )
 }
 
-export default CreateLink
+export default CreateLink;
